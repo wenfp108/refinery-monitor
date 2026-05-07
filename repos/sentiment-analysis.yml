@@ -5,5 +5,5 @@ track:
   - lines_changed
 serv00_check:
   repo: Central-Bank
-  signal_type: reddit
+  path: reddit/sentiment
   label: serv00

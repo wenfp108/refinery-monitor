@@ -77,21 +77,30 @@ def get_workflow_stats(repo_name):
     return stats
 
 def check_serv00(cfg):
-    """通过 Central-Bank 的 commit 活动间接检测 serv00 状态"""
+    """通过 Central-Bank 的 reddit/sentiment/ 文件检测 serv00 状态"""
     if not TOKEN:
         return None
     repo = cfg.get("repo", "Central-Bank")
     label = cfg.get("label", "serv00")
-    since = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
-    commits = api(f"https://api.github.com/repos/{OWNER}/{repo}/commits", params={"since": since, "per_page": 20})
-    if not commits or not isinstance(commits, list):
+    path = cfg.get("path", "reddit/sentiment")
+
+    # 查最近修改 reddit/sentiment/ 的 commit
+    commits = api(
+        f"https://api.github.com/repos/{OWNER}/{repo}/commits",
+        params={"path": path, "per_page": 1}
+    )
+    if not commits or not isinstance(commits, list) or not commits:
         return {"label": label, "status": "❓", "detail": "无法获取数据"}
-    # 检查是否有 reddit 相关的 commit
-    reddit_commits = [c for c in commits if "reddit" in c["commit"]["message"].lower()]
-    if reddit_commits:
-        dt = datetime.fromisoformat(reddit_commits[0]["commit"]["author"]["date"].replace("Z", "+00:00"))
-        return {"label": label, "status": "🟢", "detail": f"最近活动 {dt.astimezone(BJ).strftime('%m-%d %H:%M')}"}
-    return {"label": label, "status": "🟡", "detail": "24h 内无 reddit 数据"}
+
+    dt = datetime.fromisoformat(commits[0]["commit"]["author"]["date"].replace("Z", "+00:00"))
+    age_hours = (datetime.now(timezone.utc) - dt).total_seconds() / 3600
+
+    if age_hours < 24:
+        return {"label": label, "status": "🟢", "detail": f"最新数据 {dt.astimezone(BJ).strftime('%m-%d %H:%M')}"}
+    elif age_hours < 72:
+        return {"label": label, "status": "🟡", "detail": f"数据更新于 {dt.astimezone(BJ).strftime('%m-%d %H:%M')} ({int(age_hours)}h 前)"}
+    else:
+        return {"label": label, "status": "🔴", "detail": f"数据 {int(age_hours)}h 未更新"}
 
 def generate():
     repos = load_repos()
