@@ -1,5 +1,6 @@
-name: awesome-charlie-munger
+name: masters-vault
 private: false
 track:
   - commits
   - lines_changed
+  - workflow_runs
