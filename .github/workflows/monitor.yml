@@ -1,0 +1,33 @@
+name: Monitor
+
+on:
+  schedule:
+    - cron: '23 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - run: pip install requests pyyaml
+
+      - name: Generate Report
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: python generate_report.py
+
+      - name: Push README
+        run: |
+          git config user.name "Monitor Bot"
+          git config user.email "bot@wenfp108.com"
+          git add README.md
+          git diff --cached --quiet || (git commit -m "📊 Update dashboard" && git push)

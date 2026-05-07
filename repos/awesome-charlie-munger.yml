@@ -1,0 +1,5 @@
+name: awesome-charlie-munger
+private: false
+track:
+  - commits
+  - lines_changed
