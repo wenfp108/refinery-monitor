@@ -105,7 +105,7 @@ def generate():
         tracks = repo.get("track", [])
         icon = "🔒" if is_private else "🌐"
 
-        if is_private:
+        if is_private and not TOKEN:
             rows.append(f"| {icon} {name} | 🔐 | - | - | - |")
             continue
 
