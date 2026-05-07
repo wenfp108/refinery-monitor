@@ -3,7 +3,6 @@ private: false
 track:
   - commits
   - lines_changed
-  - workflow_runs
 serv00_check:
   repo: Central-Bank
   signal_type: reddit
