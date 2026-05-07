@@ -76,10 +76,28 @@ def get_workflow_stats(repo_name):
             stats[name]["other"] += 1
     return stats
 
+def check_serv00(cfg):
+    """通过 Central-Bank 的 commit 活动间接检测 serv00 状态"""
+    if not TOKEN:
+        return None
+    repo = cfg.get("repo", "Central-Bank")
+    label = cfg.get("label", "serv00")
+    since = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+    commits = api(f"https://api.github.com/repos/{OWNER}/{repo}/commits", params={"since": since, "per_page": 20})
+    if not commits or not isinstance(commits, list):
+        return {"label": label, "status": "❓", "detail": "无法获取数据"}
+    # 检查是否有 reddit 相关的 commit
+    reddit_commits = [c for c in commits if "reddit" in c["commit"]["message"].lower()]
+    if reddit_commits:
+        dt = datetime.fromisoformat(reddit_commits[0]["commit"]["author"]["date"].replace("Z", "+00:00"))
+        return {"label": label, "status": "🟢", "detail": f"最近活动 {dt.astimezone(BJ).strftime('%m-%d %H:%M')}"}
+    return {"label": label, "status": "🟡", "detail": "24h 内无 reddit 数据"}
+
 def generate():
     repos = load_repos()
     rows = []
     workflow_rows = []
+    serv00_rows = []
 
     for repo in sorted(repos, key=lambda r: r["name"]):
         name = repo["name"]
@@ -88,7 +106,6 @@ def generate():
         icon = "🔒" if is_private else "🌐"
 
         if is_private:
-            # 私有仓库不请求 API（无 token 时）
             rows.append(f"| {icon} {name} | 🔐 | - | - | - |")
             continue
 
@@ -111,6 +128,12 @@ def generate():
                 mark = "✅" if s["failure"] == 0 else "❌"
                 workflow_rows.append(f"| {name} | {wf_name[:25]} | {mark} {s['success']}/{total} | {s['failure']} |")
 
+        # serv00 状态检测
+        if "serv00_check" in repo:
+            result = check_serv00(repo["serv00_check"])
+            if result:
+                serv00_rows.append(result)
+
     now = datetime.now(BJ).strftime("%Y-%m-%d %H:%M")
 
     md = f"""# 📊 wenfp108 仓库监控
@@ -122,6 +145,16 @@ def generate():
 """
     for r in rows:
         md += r + "\n"
+
+    if serv00_rows:
+        md += """
+## 服务器
+
+| 服务 | 状态 | 详情 |
+|:-----|:-----|:-----|
+"""
+        for s in serv00_rows:
+            md += f"| {s['label']} | {s['status']} | {s['detail']} |\n"
 
     if workflow_rows:
         md += """

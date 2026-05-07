@@ -1,5 +1,0 @@
-name: new-api
-private: false
-track:
-  - commits
-  - lines_changed
