@@ -1,25 +1,25 @@
 # 📊 wenfp108 仓库监控
 
-> 更新：2026-08-04 05:31 BJT
+> 更新：2026-08-04 07:28 BJT
 
 | 仓库 | 状态 | 最后提交 | 24h提交 | 代码变更 |
 |:-----|:-----|:---------|:--------|:---------|
-| 🔒 Central-Bank | 🟢 | 08-04 05:02 | 47 | - |
+| 🔒 Central-Bank | 🟢 | 08-04 07:00 | 46 | - |
 | 🔒 Masters-Council | ⚪ | N/A | 0 | - |
-| 🌐 market-agent | 🟢 | 08-04 04:22 | 30 | - |
+| 🌐 market-agent | 🟢 | 08-04 05:50 | 27 | - |
 | 🌐 masters-vault | ⚪ | N/A | 0 | - |
 | 🌐 refinery-engine | 🟢 | 08-03 09:56 | 1 | - |
 | 🌐 sentiment-analysis | ⚪ | N/A | 0 | - |
 | 🌐 tech-sentinel | 🟢 | 08-04 03:24 | 8 | - |
 | 🌐 workouts_page | ⚪ | N/A | 0 | - |
-| 🌐 x-kit | 🟢 | 08-04 02:29 | 6 | - |
+| 🌐 x-kit | 🟢 | 08-04 05:53 | 6 | - |
 | 🌐 xin-wen-lian-bo | 🟢 | 08-03 23:25 | 1 | - |
 
 ## 服务器
 
 | 服务 | 状态 | 详情 |
 |:-----|:-----|:-----|
-| serv00 | 🔴 | 数据 1615h 未更新 |
+| serv00 | 🔴 | 数据 1617h 未更新 |
 
 ## CI (24h)
 
@@ -27,7 +27,8 @@
 |:-----|:---------|:-------|:-----|
 | market-agent | 🏦 Central Bank Harvest | ✅ 10/10 | 0 |
 | market-agent | ⚔️ PolyData Dual-Engine S | ✅ 10/10 | 0 |
-| refinery-engine | 🚀 Refinery Engine (Hourly | ✅ 19/19 | 0 |
+| refinery-engine | 🚀 Refinery Engine (Hourly | ✅ 18/18 | 0 |
+| refinery-engine | 🚀 Portfolio Tracker | ✅ 1/1 | 0 |
 | refinery-engine | 🚀 Daily Heartbeat (Anti-S | ✅ 1/1 | 0 |
 | tech-sentinel | 02. Bank Transport (Vault | ✅ 8/8 | 0 |
 | tech-sentinel | 01. Sentinel Scout (Front | ✅ 8/8 | 0 |
